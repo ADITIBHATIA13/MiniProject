@@ -1,107 +1,134 @@
+
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
 
-dataset=pd.read_csv("depression survey.csv")
+dataset=pd.read_excel("depression 2.xls")
+#
 
-X = dataset.iloc[:, 0:37].values
-y = dataset.iloc[:, 38].values
+X = dataset.iloc[:, 0:6].values
+y= dataset.iloc[:, 6].values
 
 
 
 from sklearn.model_selection import train_test_split
 X_train,X_test,y_train,y_test=train_test_split(X,y)
 
-
-
-'''from sklearn.linear_model import LogisticRegression
-log_reg = LogisticRegression()
-log_reg.fit(X, y)
-
-log_reg.score(X, y)
-
-
-
-
-y_pred = log_reg.predict(X)'''
-
-
-from sklearn.linear_model import LogisticRegression
-log_reg = LogisticRegression()
-log_reg.fit(X,y)
-
-
-
-
-
-y_pred = log_reg.predict(X)
-
-
-log_reg.score(X, y)
-
-
-
-
-"""plt.scatter(X_train, y_train) X AND Y MUST BE OF THE SAME SIZE ERROR"""
-"""plt.scatter(X_train, y_train)
-plt.plot(X_train,log_reg.predict(X_train),c="r")
-plt.show()
-
-plt.scatter(X, y)
-plt.plot(X,log_reg.predict(X_train),c="r")
-plt.show()"""
-
-
-
-from sklearn.metrics import confusion_matrix
-cm = confusion_matrix(y,y_pred)
-print(cm)
-
-from sklearn.metrics import precision_score, recall_score, f1_score
-t=precision_score(y, y_pred,average='weighted')
-j=recall_score(y, y_pred,average='weighted')
-h=f1_score(y, y_pred,average='weighted')
-
-
-
-
 from sklearn.tree import DecisionTreeClassifier
 clf = DecisionTreeClassifier(max_depth=6)
-clf.fit(X, y)
+
+clf.fit(X_train, y_train)
+
+predicted = clf.predict(X_test)
+expected = y_test
+print(predicted) 
+print(expected) 
+
+
+
+from sklearn import metrics
+y_pred = clf.predict(X)
+
+print(metrics.confusion_matrix(y_pred, y))
+
+
+from sklearn.metrics import precision_score, recall_score, f1_score
+a=precision_score(y, y_pred,average='macro')
+b=recall_score(y, y_pred,average='macro')
+c=f1_score(y, y_pred,average='macro')
+
+
 
 clf.score(X, y)
 
 
+Hospt=input("Hospt")
+#5 hospitals (1, 2, 3, 5, or 6)
+
+Treat=input("Treat")
+#The treatment received by the patient (Lithium, Imipramine, or Placebo)
+
+Time=input("Time")
+'''Either the time (days) till recurrence
+, or if no recurrence, the length (days) of the patient’s participation in the study.'''
+
+AcuteT=input("AcuteT")
+#The time (days) that the patient was depressed prior to the study.
+
+Age=input("Age")
+#The age of the patient in years,
+
+Gender=input("Gender")
+#gender (1 = Female, 2 = Male)
+
+T=clf.predict([[Hospt,Treat,Time,AcuteT,Age,Gender]])
+
+# diabates
+
+dataset=pd.read_csv("diabetes.csv")
+X = dataset.iloc[:, 0:8].values
+y = dataset.iloc[:, 8].values
 
 
+
+from sklearn.model_selection import train_test_split
+X_train,X_test,y_train,y_test=train_test_split(X,y)
+
+from sklearn.tree import DecisionTreeClassifier
+clf = DecisionTreeClassifier(max_depth=6)
+
+clf.fit(X_train, y_train)
+
+predicted = clf.predict(X_test)
+expected = y_test
+print(predicted) 
+print(expected) 
+
+plt.scatter(expected, predicted)
+
+from sklearn import metrics
 y_pred = clf.predict(X)
 
+print(metrics.confusion_matrix(y_pred, y))
 
-from sklearn.metrics import confusion_matrix
-cm = confusion_matrix(y, y_pred)
-print(cm)
 
 from sklearn.metrics import precision_score, recall_score, f1_score
-precision_score(y, y_pred,average='weighted')
-recall_score(y, y_pred,average='weighted')
-f1_score(y, y_pred,average='weighted')
+d=precision_score(y, y_pred,average='macro')
+e=recall_score(y, y_pred,average='macro')
+f=f1_score(y, y_pred,average='macro')
+
+plt.scatter(a,b)
+plt.plot(expected,predicted)
+
+clf.score(X, y)
+
+No_of_times_pregnant=input("No_of_times_pregnant")
+
+glucose_concentration=input("glucose_concentration")
+blood_pressure=input("blood_pressure")
+skin_fold_thickness=input("skin_fold_thickness")
+serum_insulin=input("serum_insulin")
+
+
+BMI=input("BMI")
+Diabetes_pedigree=input("Diabetes_pedigree")
+Age=input("Age")
+
+j=clf.predict([[No_of_times_pregnant,glucose_concentration,blood_pressure,skin_fold_thickness,serum_insulin,BMI,Diabetes_pedigree,Age]])
 
 
 
-from sklearn.neighbors import KNeighborsClassifier
-classifier = KNeighborsClassifier(n_neighbors=3)
-classifier.fit(X, y)
-classifier.score(X, y)
+if(T==0 or j==0):
+    print("person is NOT depressive and non diabatic")
+elif(T==1 and j==0):
+    print("DEPRESSIVE")
+elif(T==0 and j==1):
+    print("Diabatic")
+else:
+    print("both DEPRESSIVE and diabatic")
+    
+    
 
-y_pred = classifier.predict(X)
 
 
-from sklearn.metrics import confusion_matrix
-cm = confusion_matrix(y, y_pred)
-print(cm)
-
-from sklearn.metrics import precision_score, recall_score, f1_score
-precision_score(y, y_pred,average='weighted')
-recall_score(y, y_pred,average='weighted')
-f1_score(y, y_pred,average='weighted')
